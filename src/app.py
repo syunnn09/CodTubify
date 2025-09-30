@@ -1,21 +1,10 @@
-from collections import defaultdict
 from pathlib import Path
 from tkinter import *
 from gui.Primary_Window.sub_gui.about_GUI.gui import About
 from gui.Primary_Window.sub_gui.home_GUI.gui import Home
 from gui.Primary_Window.sub_gui.playlist_GUI.gui import play_next,play_previous,Playlist
 from gui.Primary_Window.sub_gui.featured_GUI.gui import Featured
-from backend.Download_process.song_entry_identifier import is_youtube_url
-from backend.Download_process.song_downloader import download_song
-from backend.Download_process.playlist_scratcher import get_playlist_items
-from backend.Download_process.playlist_downloader import download_playlist
-from backend.Download_process.url_from_title_scraper import get_youtube_uri
-from backend.Download_process.remove_temp_audio import remove_temp
 from backend.player.player import *
-import threading
-
-
-
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./gui/Primary_Window/assets")
@@ -23,12 +12,11 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-
 '''def playit_button_clicked():
     user_home_entry=Home.home_entrybox.get()
     if is_youtube_url(user_home_entry):
         download_song(user_home_entry)
-        play_song(user_home_entry) 
+        play_song(user_home_entry)
     elif user_home_entry==None:
         pass
     else:
@@ -43,23 +31,19 @@ def continous_playing():
             continue
         else:
             if mixer.music.get_busy()==False:
-                play_next() # I know the Above statement was kind of 
+                play_next() # I know the Above statement was kind of
                             # redundant but I'm just taking extra precaution
-            else: 
+            else:
                 pass
     except Exception as e:
         print("Got an error from continous_playing()\n",e)
         pass
-    
 
 def continous_playing_thread():
     a=threading.Thread(target=continous_playing(),daemon=True)
     a.start()
 '''
 ##############################
-
-
-
 
 initialise_mixer()
 
@@ -80,45 +64,36 @@ def handle_button_press(btn_name):
         current_window=About(window)
     elif btn_name == "pauseresume":
         pauseresume_button_clicked()
-        
 
 
 # ~ FUNCTIONS FOR BUTTONS FOR CHANGING TABS ~
 
-def home_button_clicked(): # (coordinates : x= 0 , y= 133)
-    print("Home button clicked")
+def home_button_clicked(): # (coordinates : x=0, y=133)
     canvas.itemconfig(page_navigator, text="Home")
-    sidebar_navigator.place(x=0, y=133)    
+    sidebar_navigator.place(x=0, y=133)
 
-def playlist_button_clicked(): # (coordinates : x= 0 , y= 184)
-    print("Playlist button clicked")
+def playlist_button_clicked(): # (coordinates : x=0, y=184)
     canvas.itemconfig(page_navigator, text="Playlist")
     sidebar_navigator.place(x=0, y=184)
 
-def featured_button_clicked():
-    print("Featured button clicked")
+def featured_button_clicked(): # (coordinates : x=0, y=232)
     canvas.itemconfig(page_navigator, text="Featured")
     sidebar_navigator.place(x=0, y=232)
 
-def about_button_clicked(): # (coordinates : x= 0 , y= 232)
-    print("About button clicked")
+def about_button_clicked(): # (coordinates : x=0, y=232)
     canvas.itemconfig(page_navigator, text="About")
     sidebar_navigator.place(x=0, y=280)
-    
-def pauseresume_button_clicked():
-    if (pauseresume_button['text']=="Pause"):
-        if mixer.music.get_busy()==True:
-            print("Pause button clicked")
-            pause_song()
-            pauseresume_button.config(image=resume_image,text="Resume")
-        
 
-    elif (pauseresume_button['text']=="Resume"):
-        if mixer.music.get_busy()==False:
-            print("Resume button clicked")
+def pauseresume_button_clicked():
+    if pauseresume_button['text'] == "Pause":
+        if mixer.music.get_busy():
+            pause_song()
+            pauseresume_button.config(image=resume_image, text="Resume")
+
+    elif pauseresume_button['text'] == "Resume":
+        if not mixer.music.get_busy():
             resume_song()
-            pauseresume_button.config(image=pause_image,text="Pause")
-        
+            pauseresume_button.config(image=pause_image, text="Pause")
 
 window = Tk()
 window.title("CodTubify")
@@ -148,8 +123,7 @@ canvas = Canvas(
     relief = "ridge"
 )
 canvas.place(x = 0, y = 0)
-background_image = PhotoImage(
-    file=relative_to_assets("image_1.png"))
+background_image = PhotoImage(file=relative_to_assets("image_1.png"))
 image_1 = canvas.create_image(
     566.0,
     253.0,
@@ -159,8 +133,7 @@ image_1 = canvas.create_image(
 current_window=Home(window)
 
 ####### HOME BUTTON #############
-home_button_image = PhotoImage(
-    file=relative_to_assets("button_1.png"))
+home_button_image = PhotoImage(file=relative_to_assets("button_1.png"))
 home_button = Button(
     image=home_button_image,
     bg="#171435",
@@ -180,8 +153,7 @@ home_button.place(
 #################################
 
 ####### PLAYLIST BUTTON #############
-playlist_button_image = PhotoImage(
-    file=relative_to_assets("button_2.png"))
+playlist_button_image = PhotoImage(file=relative_to_assets("button_2.png"))
 playlist_button = Button(
     image=playlist_button_image,
     borderwidth=0,
@@ -201,8 +173,7 @@ playlist_button.place(
 #####################################
 
 ####### FEATURED BUTTON #############
-featured_button_image = PhotoImage(
-    file=relative_to_assets("button_8.png"))
+featured_button_image = PhotoImage(file=relative_to_assets("button_8.png"))
 featured_button = Button(
     image=featured_button_image,
     borderwidth=0,
@@ -221,12 +192,8 @@ featured_button.place(
 )
 
 
-
-
-
 ####### ABOUT BUTTON ################
-About_button_image = PhotoImage(
-    file=relative_to_assets("button_7.png"))
+About_button_image = PhotoImage(file=relative_to_assets("button_7.png"))
 About_button = Button(
     image=About_button_image,
     borderwidth=0,
@@ -247,15 +214,11 @@ About_button.place(
 #####################################
 
 
-
-
 ######## PREVIOUS-PAUSERESUME-FORWARD BUTTONS #######
 
 ######## (i) PAUSE-RESUME BUTTON #######
-pause_image = PhotoImage(
-    file=relative_to_assets("button_3.png"))
-resume_image = PhotoImage(
-    file=relative_to_assets("button_4.png"))
+pause_image = PhotoImage(file=relative_to_assets("button_3.png"))
+resume_image = PhotoImage(file=relative_to_assets("button_4.png"))
 
 global pauseresume_button
 pauseresume_button = Button(
@@ -278,14 +241,13 @@ pauseresume_button.place(
 ########################################
 
 ######## (ii)  FORWARD BUTTON ##########
-Forward_button_image = PhotoImage(
-    file=relative_to_assets("button_5.png"))
+Forward_button_image = PhotoImage(file=relative_to_assets("button_5.png"))
 Forward_button = Button(
     image=Forward_button_image,
     borderwidth=0,
     bg="#171435",
     highlightthickness=0,
-    command=lambda: play_next(),
+    command=play_next,
     relief="flat"
 )
 Forward_button.place(
@@ -297,14 +259,13 @@ Forward_button.place(
 ########################################
 
 ###### (iii)  PREVIOUS BUTTON ##########
-Previous_button_image = PhotoImage(
-    file=relative_to_assets("button_6.png"))
+Previous_button_image = PhotoImage(file=relative_to_assets("button_6.png"))
 Previous_button = Button(
     image=Previous_button_image,
     borderwidth=0,
     bg="#171435",
     highlightthickness=0,
-    command=lambda: play_previous(),
+    command=play_previous,
     relief="flat"
 )
 Previous_button.place(
@@ -340,7 +301,7 @@ page_navigator = canvas.create_text(
 
 
 #App name
-canvas.create_text(             
+canvas.create_text(
     21.0,
     21.0,
     anchor="nw",
@@ -348,20 +309,6 @@ canvas.create_text(
     fill="#FFFFFF",
     font=("Montserrat Bold", 32 * -1)
 )
-
-
-############## Greetings/Hello ################################ 
-from gui.Primary_Window.scripts.greetings import greet
-canvas.create_text(
-    800.0,
-    46.0,
-    anchor="nw",
-    text=greet(),
-    fill="#808080",
-    font=("Montserrat SemiBold", 16 * -1)
-)
-#################################################################
-
 
 #Text-to-delete
 canvas.create_text( #Background
